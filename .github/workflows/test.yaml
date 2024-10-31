@@ -16,4 +16,5 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}  # Add this secret in your GitHub repo settings
         run: |
-          python3 discord_webhook.py
+          # Pass the GitHub event payload to the Python script
+          echo "${{ toJson(github.event) }}" | python3 send_discord_message.py
