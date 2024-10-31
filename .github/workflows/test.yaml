@@ -3,7 +3,7 @@ name: Git Webhook Trigger
 on:
   push:
     branches:
-      - main  # or any other branch you want to monitor
+      - main  
   pull_request:
     types: [opened, closed, merged]
 
