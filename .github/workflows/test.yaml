@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Trigger Webhook
         env:
-          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}  # Store webhook URL in GitHub secrets for security
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }} 
         run: |
           curl -X POST $WEBHOOK_URL \
           -H "Content-Type: application/json" \
