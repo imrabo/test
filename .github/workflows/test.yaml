@@ -3,7 +3,7 @@ name: Git Webhook Trigger
 on:
   push:
     branches:
-      - main  
+      - main  # or any branch you want to monitor
   pull_request:
     types: [opened, closed, merged]
 
@@ -11,16 +11,28 @@ jobs:
   notify_webhook:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Webhook
+      - name: Send Webhook Notification
         env:
-          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }} 
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}  # Ensure you set this secret
         run: |
-          curl -X POST $WEBHOOK_URL \
+          if [ -z "$WEBHOOK_URL" ]; then
+            echo "Error: WEBHOOK_URL is not set"
+            exit 1
+          fi
+
+          # Create a JSON payload with the necessary information
+          json_payload=$(cat <<EOF
+          {
+            "user": "${{ github.actor }}",
+            "event": "${{ github.event_name }}",
+            "action": "${{ github.event.action || 'push' }}",
+            "commit": "${{ github.event.head_commit.message || github.event.pull_request.title }}",
+            "url": "${{ github.event.head_commit.url || github.event.pull_request.html_url }}"
+          }
+          EOF
+          )
+
+          # Send the webhook notification
+          curl -X POST "$WEBHOOK_URL" \
           -H "Content-Type: application/json" \
-          -d '{
-                "user": "${{ github.actor }}",
-                "event": "${{ github.event_name }}",
-                "action": "${{ github.event.action || 'push' }}",
-                "commit": "${{ github.event.head_commit.message || github.event.pull_request.title }}",
-                "url": "${{ github.event.head_commit.url || github.event.pull_request.html_url }}"
-              }'
+          -d "$json_payload"
