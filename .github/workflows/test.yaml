@@ -20,14 +20,27 @@ jobs:
             exit 1
           fi
 
+          # Log the context variables
+          echo "Actor: ${{ github.actor }}"
+          echo "Event Name: ${{ github.event_name }}"
+          echo "Action: ${{ github.event.action || 'push' }}"
+          
+          # Prepare to create a JSON payload
+          commit_message="${{ github.event.head_commit.message || github.event.pull_request.title }}"
+          commit_url="${{ github.event.head_commit.url || github.event.pull_request.html_url }}"
+
+          # Log the values being used in the payload
+          echo "Commit Message: $commit_message"
+          echo "Commit URL: $commit_url"
+
           # Create a JSON payload with the necessary information
           json_payload=$(cat <<EOF
           {
             "user": "${{ github.actor }}",
             "event": "${{ github.event_name }}",
             "action": "${{ github.event.action || 'push' }}",
-            "commit": "${{ github.event.head_commit.message || github.event.pull_request.title }}",
-            "url": "${{ github.event.head_commit.url || github.event.pull_request.html_url }}"
+            "commit": "$commit_message",
+            "url": "$commit_url"
           }
           EOF
           )
@@ -35,9 +48,9 @@ jobs:
           # Log the payload to debug
           echo "Payload to send: $json_payload"
 
-          # Check if the payload is empty
-          if [[ -z "$json_payload" ]]; then
-            echo "Error: Payload is empty"
+          # Check if the payload is empty or if critical values are missing
+          if [[ -z "$json_payload" || "$commit_message" == "" || "$commit_url" == "" ]]; then
+            echo "Error: Payload is empty or missing critical information"
             exit 1
           fi
 
