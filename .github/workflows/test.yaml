@@ -3,6 +3,9 @@ name: Webhook to Discord
 on:
   pull_request:
     types: [opened, edited, closed, reopened]
+  push:
+    branches:
+      - main  # Change 'main' to your default branch name if different
 
 jobs:
   send_to_discord:
@@ -12,7 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Send Pull Request to Discord
+      - name: Send Event to Discord
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}  # Add this secret in your GitHub repo settings
         run: |
