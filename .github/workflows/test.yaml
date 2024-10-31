@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main  # Change 'main' to your main branch name if different
+  fork:  # Add 'fork' as an event trigger, no inline 'run' command here
 
 jobs:
   send_to_discord:
@@ -20,4 +21,9 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
           GITHUB_EVENT_DATA: ${{ toJson(github.event) }}
         run: |
-          python3 discord_webhook.py
+          # Decide which script to run based on the event
+          if [[ "${{ github.event_name }}" == "fork" ]]; then
+            python3 forkee_webhook.py
+          else
+            python3 discord_webhook.py
+          fi
