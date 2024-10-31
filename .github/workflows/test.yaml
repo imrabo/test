@@ -5,7 +5,7 @@ on:
     types: [opened, edited, closed, reopened]
   push:
     branches:
-      - main  # Change 'main' to your default branch name if different
+      - main  # Change 'main' to your main branch name if different
 
 jobs:
   send_to_discord:
@@ -17,7 +17,7 @@ jobs:
 
       - name: Send Event to Discord
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}  # Add this secret in your GitHub repo settings
+          DISCORD_WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          GITHUB_EVENT_DATA: ${{ toJson(github.event) }}
         run: |
-          # Pass the GitHub event payload to the Python script
-          echo "${{ toJson(github.event) }}" | python3 discord_webhook.py
+          python3 discord_webhook.py
