@@ -2,7 +2,7 @@
 # import requests
 
 
-# DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1301604054517944390/mIGquzAPJaZpiCoYaEc1299RMtiugJLnWXLNrSun7udO8nNQ50JwjwatTdcdlbQ3ka_Y'
+DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1301604054517944390/mIGquzAPJaZpiCoYaEc1299RMtiugJLnWXLNrSun7udO8nNQ50JwjwatTdcdlbQ3ka_Y'
 
 
 # response = requests.post(DISCORD_WEBHOOK_URL, json={"content": "nothing"})
@@ -18,7 +18,9 @@ import json
 import requests
 
 # Retrieve the Discord webhook URL and event data from environment variables
-DISCORD_WEBHOOK_URL = os.environ.get('WEBHOOK_URL')
+# DISCORD_WEBHOOK_URL = os.environ.get('WEBHOOK_URL')
+DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1301604054517944390/mIGquzAPJaZpiCoYaEc1299RMtiugJLnWXLNrSun7udO8nNQ50JwjwatTdcdlbQ3ka_Y'
+
 event_data = os.environ.get('GITHUB_EVENT_DATA')
 
 # Parse the JSON data
