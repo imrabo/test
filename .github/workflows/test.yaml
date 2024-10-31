@@ -32,7 +32,18 @@ jobs:
           EOF
           )
 
+          # Log the payload to debug
+          echo "Payload to send: $json_payload"
+
+          # Check if the payload is empty
+          if [[ -z "$json_payload" ]]; then
+            echo "Error: Payload is empty"
+            exit 1
+          fi
+
           # Send the webhook notification
-          curl -X POST "$WEBHOOK_URL" \
+          response=$(curl -X POST "$WEBHOOK_URL" \
           -H "Content-Type: application/json" \
-          -d "$json_payload"
+          -d "$json_payload")
+
+          echo "Response from webhook: $response"
